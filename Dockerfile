@@ -16,7 +16,7 @@ ENV HOME=/home/$DOCKER_USER
 COPY apt.txt /tmp/
 RUN useradd -m -s /bin/bash -N -u $DOCKER_UID $DOCKER_USER && \
     chmod g+w /etc/passwd && \
-    apt-get update -y \
+    apt-get update -y && \
     xargs -a /tmp/apt.txt apt-get install -y && \
     apt-get clean && \
     rm /tmp/apt.txt
