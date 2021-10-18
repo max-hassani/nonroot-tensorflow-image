@@ -1,0 +1,19 @@
+name: Docker Testing
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - run: docker build -t muhhassani/nonroot_tensorflow:latest .
+      - run: docker tag muhhassani/nonroot_tensorflow:latest muhhassani/nonroot_tensorflow:"$(date +%F)"
+      - run: docker push muhhassani/nonroot_tensorflow:latest
+      - run: docker push muhhassani/nonroot_tensorflow:"$(date +%F)"
