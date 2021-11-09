@@ -1,5 +1,7 @@
 FROM tensorflow/tensorflow:latest-gpu
 
+LABEL maintainer="Muhammad Hassani <hassani@mpie.de>"
+
 USER root
 
 ARG DOCKER_USER="docker_user"
@@ -27,15 +29,18 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
    echo 'eval "$(command conda shell.bash hook 2> /dev/null)"' >> /etc/skel/.bashrc
 
 COPY apt.txt /tmp/
+RUN apt-get update -y && \
+    xargs -a /tmp/apt.txt apt-get install -y && \
+    apt-get clean && \
+    rm /tmp/apt.txt
+
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
+    sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
+    sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
     useradd -m -s /bin/bash -N -u $DOCKER_UID $DOCKER_USER && \
     mkdir -p "${CONDA_DIR}" && \
     chown "${DOCKER_USER}:${DOCKER_GID}" "${CONDA_DIR}" && \
     chmod g+w /etc/passwd && \
-    apt-get update -y && \
-    xargs -a /tmp/apt.txt apt-get install -y && \
-    apt-get clean && \
-    rm /tmp/apt.txt && \
     fix-permissions "${HOME}" && \
     fix-permissions "${CONDA_DIR}"
 
