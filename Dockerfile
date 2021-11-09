@@ -28,8 +28,6 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
 
 COPY apt.txt /tmp/
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
-    sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
-    sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
     useradd -m -s /bin/bash -N -u $DOCKER_UID $DOCKER_USER && \
     mkdir -p "${CONDA_DIR}" && \
     chown "${DOCKER_USER}:${DOCKER_GID}" "${CONDA_DIR}" && \
