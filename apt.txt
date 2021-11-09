@@ -1,2 +1,9 @@
+tini
+wget
+ca-certificates
+sudo
+locales
+fonts-liberation
+run-one
 nano
 vim
