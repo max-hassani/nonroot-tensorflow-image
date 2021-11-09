@@ -1,7 +1,7 @@
 name: Docker Testing
 
 on:
-  pull_request:
+  push:
     branches: [ master ]
 
 jobs:
@@ -13,3 +13,5 @@ jobs:
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - run: docker build -t muhhassani/nonroot_tensorflow:latest .
       - run: docker tag muhhassani/nonroot_tensorflow:latest muhhassani/nonroot_tensorflow:"$(date +%F)"
+      - run: docker push muhhassani/nonroot_tensorflow:latest
+      - run: docker push muhhassani/nonroot_tensorflow:"$(date +%F)"
